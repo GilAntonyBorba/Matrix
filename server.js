@@ -247,12 +247,12 @@ app.post('/uploadImage', (req, res) => {
       }
   
       const client = new Client({
-    user: req.session.userId,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: req.session.password,
-    port: process.env.DB_PORT,
-  });
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+      });
       await client.connect();
 
       try {
@@ -278,6 +278,9 @@ app.post('/uploadImage', (req, res) => {
 
 
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------DELETE--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
   
 
@@ -289,6 +292,37 @@ app.post('/uploadImage', (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     res.render('delete', { user: req.session.userId });
   });
+
+  // DELETE HUMANO
+
+  app.delete('/deleteHumano/:id', async (req, res) => {
+    const humanoId = req.params.id;
+    const client = new Client({
+    user: req.session.userId,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: req.session.password,
+    port: process.env.DB_PORT,
+  });
+    await client.connect();
+
+    try {
+        const result = await client.query('DELETE FROM Humanos WHERE id_humano = $1', [humanoId]);
+
+        if (result.rowCount > 0) {
+            res.status(200).send('Humano deletado com sucesso');
+        } else {
+            res.status(404).send('Humano não encontrado');
+        }
+    } catch (error) {
+        console.error('Erro ao deletar humano:', error);
+        res.status(500).send('Erro no servidor');
+    } finally {
+        await client.end();
+    }
+  });
+
+  // DELETE EVENTO
   
 
   app.delete('/deleteEvento/:id', async (req, res) => {
@@ -319,12 +353,92 @@ app.post('/uploadImage', (req, res) => {
   });
 
 
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------UPDATE--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 // update
 // Rota para renderizar a página update.ejs
 app.get('/update', (req, res) => {
   if (!req.session || !req.session.userId) return res.redirect('/login'); 
   res.render('update', { user: req.session.userId }); 
 });
+
+
+// update humanos
+// Rota para atualizar um humano
+app.put('/updateHumano/:id', async (req, res) => {
+  const humanoId = req.params.id;
+  const { nomeHumano, humanoDataNasc, humanoStatus, humanoResistencia } = req.body;
+
+  // Construa dinamicamente o SQL apenas com os campos fornecidos
+  let camposParaAtualizar = [];
+  let values = [];
+  let index = 1;
+
+  if (nomeHumano !== undefined) {
+      camposParaAtualizar.push(`nome_humano = $${index++}`);
+      values.push(nomeHumano);
+  }
+  if (humanoDataNasc !== undefined) {
+      camposParaAtualizar.push(`data_nascimento = $${index++}`);
+      values.push(humanoDataNasc);
+  }
+  if (humanoStatus !== undefined) {
+      camposParaAtualizar.push(`status_humano = $${index++}`);
+      values.push(humanoStatus);
+  }
+  if (humanoResistencia !== undefined) {
+      camposParaAtualizar.push(`resistencia = $${index++}`);
+      values.push(humanoResistencia);
+  }
+
+  // Se nenhum campo foi fornecido para atualizar, retornar erro
+  if (camposParaAtualizar.length === 0) {
+      return res.status(400).send('Nenhum campo para atualizar foi fornecido.');
+  }
+
+  // Adicione o ID como último parâmetro
+  values.push(humanoId);
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  try {
+      const query = `
+          UPDATE Humanos
+          SET ${camposParaAtualizar.join(', ')}
+          WHERE id_humano = $${index}
+      `;  
+
+      const result = await client.query(query, values);
+
+      if (result.rowCount > 0) {
+          res.status(200).send('Humano atualizado com sucesso');
+      } else {
+          res.status(404).send('Humano não encontrado');
+      }
+  } catch (error) {
+      console.error('Erro ao atualizar humano:', error);
+      res.status(500).send('Erro no servidor');
+  } finally {
+      await client.end();
+  }
+});
+
+
 
 
 app.put('/updateAgentesStatus', async (req, res) => {

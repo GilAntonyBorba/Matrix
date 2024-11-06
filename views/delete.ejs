@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deletar Evento - Matrix DB</title>
+    <title>Delete - Matrix DB</title>
     
     <link rel="icon" href="/imagens/MatrixImagens/MatrixPoster.jpg" type="image/jpg">
 
@@ -98,43 +98,87 @@
     </header>
     <main>
      
-        
-      <br>
-      <br>
+       
 
+    <br>
+    <!-- DELETE HUMANO -->
+    <br>
+
+    
+
+    
     <div class="container mt-5">
-        <h1>Deletar Evento</h1>
-        <form id="deleteForm">
-            <div class="mb-3">
-                <label for="eventoId" class="form-label">ID do Evento</label>
-                <input type="number" class="form-control" id="eventoId" required>
-            </div>
-            <button type="submit" class="btn btn-danger">Deletar</button>
-        </form>
+      <h1>Deletar Humano</h1>
+      <form id="deleteHumano">
+          <div class="mb-3">
+              <label for="humanoId" class="form-label">ID do Humano</label>
+              <input type="number" class="form-control" id="humanoId" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Deletar Humano</button>
+      </form>
     </div>
 
     <script>
-        document.getElementById('deleteForm').addEventListener('submit', async (event) => {
+        document.getElementById('deleteHumano').addEventListener('submit', async (event) => {
             event.preventDefault();
             
-            const eventoId = document.getElementById('eventoId').value;
+            const humanoId = document.getElementById('humanoId').value;
 
             try {
-                const response = await fetch(`http://localhost:3000/deleteEvento/${eventoId}`, {
+                const response = await fetch(`http://localhost:3000/deleteHumano/${humanoId}`, {
                     method: 'DELETE',
                 });
 
                 if (response.ok) {
-                    alert('Evento deletado com sucesso!');
+                    alert('Humano deletado com sucesso!');
                 } else {
                     const errorText = await response.text();
-                    alert(`Erro ao deletar evento: ${errorText}`);
+                    alert(`Erro ao deletar humano: ${errorText}`);
                 }
             } catch (error) {
                 console.error('Erro:', error);
-                alert('Ocorreu um erro ao deletar o evento!');
+                alert('Ocorreu um erro ao deletar o humano!');
             }
         });
+    </script>
+
+    <br>
+    <!-- DELETE EVENTO -->
+    <br>
+
+    <div class="container mt-5">
+      <h1>Deletar Evento</h1>
+      <form id="deleteEvento">
+          <div class="mb-3">
+              <label for="eventoId" class="form-label">ID do Evento</label>
+              <input type="number" class="form-control" id="eventoId" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Deletar Evento</button>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById('deleteEvento').addEventListener('submit', async (event) => {
+          event.preventDefault();
+          
+          const eventoId = document.getElementById('eventoId').value;
+
+          try {
+              const response = await fetch(`http://localhost:3000/deleteEvento/${eventoId}`, {
+                  method: 'DELETE',
+              });
+
+              if (response.ok) {
+                  alert('Evento deletado com sucesso!');
+              } else {
+                  const errorText = await response.text();
+                  alert(`Erro ao deletar evento: ${errorText}`);
+              }
+          } catch (error) {
+              console.error('Erro:', error);
+              alert('Ocorreu um erro ao deletar o evento!');
+          }
+      });
     </script>
 
 

@@ -200,6 +200,90 @@
       <br>
       <br>
 
+
+      <div class="container mt-5">
+        <h1>Atualizar Humano</h1>
+        <form id="updateHumanoForm">
+            <div class="mb-3">
+                <label for="humanoId" class="form-label">ID do Humano (Obrigatório)</label>
+                <input type="number" class="form-control" id="humanoId" required>
+            </div>
+            <div class="mb-3">
+                <label for="nomeHumano" class="form-label">Nome (Opcional)</label>
+                <input type="text" class="form-control" id="nomeHumano">
+            </div>
+            <div class="mb-3">
+                <label for="humanoDataNasc" class="form-label">Data de Nascimento (Opcional)</label>
+                <input type="date" class="form-control" id="humanoDataNasc">
+            </div>
+            <div class="mb-3">
+                <label for="humanoStatus" class="form-label">Status (Opcional)</label>
+                <input type="text" class="form-control" id="humanoStatus">
+            </div>
+            <div class="mb-3">
+                <label for="humanoResistencia" class="form-label">Resistência (Opcional)</label>
+                <input type="number" class="form-control" id="humanoResistencia">
+            </div>
+            <button type="submit" class="btn btn-primary">Atualizar Humano</button>
+        </form>
+    </div>
+    
+    <script>
+      document.getElementById('updateHumanoForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const humanoId = document.getElementById('humanoId').value;
+        const nomeHumano = document.getElementById('nomeHumano').value || null;
+        const humanoDataNasc = document.getElementById('humanoDataNasc').value || null;
+        const humanoStatus = document.getElementById('humanoStatus').value || null;
+        const humanoResistencia = document.getElementById('humanoResistencia').value || null;
+
+        // Construir objeto com apenas campos preenchidos
+        const dataToUpdate = {
+            nomeHumano: nomeHumano,
+            humanoDataNasc: humanoDataNasc,
+            humanoStatus: humanoStatus,
+            humanoResistencia: humanoResistencia
+        };
+
+        Object.keys(dataToUpdate).forEach(key => {
+            if (dataToUpdate[key] === null || dataToUpdate[key] === "") {
+                delete dataToUpdate[key];
+            }
+        });
+
+        if (Object.keys(dataToUpdate).length === 0) {
+            alert('Nenhum campo para atualizar foi fornecido.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/updateHumano/${humanoId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToUpdate),
+            });
+
+            if (response.ok) {
+                alert('Humano atualizado com sucesso!');
+            } else {
+                const errorText = await response.text();
+                alert(`Erro ao atualizar humano: ${errorText}`);
+            }
+          } catch (error) {
+            console.error('Erro ao atualizar humano:', error);
+            alert('Ocorreu um erro ao atualizar o humano!');
+          }
+      });
+    </script>
+    
+
+
+      <br>
+      <br>
+
       <div class="container mt-5">
         <h1>Atualizar Nível de Autonomia</h1>
         <form action="/updateAgente" method="POST">
