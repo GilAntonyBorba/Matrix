@@ -41,13 +41,14 @@ body {
     height: 50px;
   }
   #dropArea {
-    margin-left: 5%;
+    /* margin-left: 5%;
     margin-right: 5%;
     padding-top: 1%;
-    padding-bottom: 1%;
+    padding-bottom: 1%; */
 
     border: 2px dashed #cccccc;
     padding: 20px;
+    margin-top: 20px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s;

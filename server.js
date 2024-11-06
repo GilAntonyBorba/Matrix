@@ -373,7 +373,8 @@ app.get('/update', (req, res) => {
 
 // update humanos
 // Rota para atualizar um humano
-app.put('/updateHumano/:id', async (req, res) => {
+// Rota para atualizar um humano com suporte a imagem opcional
+app.put('/updateHumano/:id', upload.single('imagem'), async (req, res) => {
   const humanoId = req.params.id;
   const { nomeHumano, humanoDataNasc, humanoStatus, humanoResistencia } = req.body;
 
@@ -399,6 +400,14 @@ app.put('/updateHumano/:id', async (req, res) => {
       values.push(humanoResistencia);
   }
 
+  // Verifique se há uma imagem para atualizar
+  if (req.file) {
+      const tipoImagem = req.file.mimetype.split('/')[1];
+      camposParaAtualizar.push(`imagem = $${index++}`);
+      camposParaAtualizar.push(`tipo_imagem = $${index++}`);
+      values.push(req.file.buffer, tipoImagem);
+  }
+
   // Se nenhum campo foi fornecido para atualizar, retornar erro
   if (camposParaAtualizar.length === 0) {
       return res.status(400).send('Nenhum campo para atualizar foi fornecido.');
@@ -421,7 +430,7 @@ app.put('/updateHumano/:id', async (req, res) => {
           UPDATE Humanos
           SET ${camposParaAtualizar.join(', ')}
           WHERE id_humano = $${index}
-      `;  
+      `;
 
       const result = await client.query(query, values);
 
@@ -437,6 +446,7 @@ app.put('/updateHumano/:id', async (req, res) => {
       await client.end();
   }
 });
+
 
 
 
