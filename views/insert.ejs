@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Matrix</title>
+    
+    <link rel="icon" href="/imagens/MatrixImagens/MatrixPoster.jpg" type="image/jpg">
+
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles/reset.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/styleNav.css">
+    <link rel="stylesheet" href="/styles/styleSwiperCarousel.css">
+    <link rel="stylesheet" href="/styles/styleSwiperBootstrap.css">
+    <title>Inserts</title>
+
+    <style>
+      body {
+        /* background: #eee; */
+        /* background: rgb(232 232 237/70%); */
+        /* background: #030305; */
+        background-image: url('/imagens/MatrixImagens/neo-matrix-resurrection.jpg');
+        background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
+        background-position: center;  /* Centraliza a imagem */
+        background-repeat: no-repeat; /* Evita a repetição da imagem */
+        /* background-color: rgba(63, 255, 20, 0.7); */
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #000000;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+      <nav class="navbar fixed-top navbar-expand-lg ">
+        <div class="container-fluid  gap-2">
+          <button class="navbar-toggler navbar-toggler-custom order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" ></span>
+          </button>
+          <a class="navbar-brand order-2 mx-auto" href="/dashboard">
+            <img src="/imagens/JLImagens/matrixLogo.png" class="logo" width="168" height="16" alt="LOGO - MATRIX">
+          </a>
+          
+          <div class="navbar-brand order-4 dropdown">
+            <a href="#" class="nav-link dropdown-toggle" id="avatarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon_menu-person" width="25" height="25" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+              </svg>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarDropdown">
+              <li><a class="dropdown-item" id="color-picker" href="#"><a href=""><%= user %></a></a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" id="color-picker" href="#"><a href="/logout">Logout</a></a></li>
+              <!-- <li><hr class="dropdown-divider"></li> -->
+              <li><a class="dropdown-item" id="color-picker" href="#"><a href="/signup">SignUp</a></a></li>
+            </ul>
+          </div>
+          
+          
+          <!-- <a class="navbar-brand order-5 disabled" id="color-picker" href="#">
+            <svg xmlns="http://w3.org/2000/svg" class="icon_menu-cart" width="22" height="22" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+          </a> -->
+          <div class="collapse navbar-collapse order-3" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" id="color-picker" href="/select">Select</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" id="color-picker" aria-current="page" href="/insert">Insert</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="color-picker" href="/update">Update</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="color-picker" href="/delete">Delete</a>
+                </li>
+            </div>
+            <!-- <form class="d-flex mr-left ms-2" role="search" id="barra-de-pesquisa">
+              <input class="form-control me-2 col-12" id="color-input-picker" type="search" placeholder="Pesquisar" aria-label="Search">
+              <button class="btn btn-outline-success" id="color-button-picker" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </button>
+            </form> -->
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+     
+        
+        <% if (error) { %>
+            <p style="color: red;"><%= error %></p>
+        <% } %>
+    
+        <div class="container mt-5">
+            <h1>Adicionar Novo Agente</h1>
+            <form id="insertForm">
+                <div class="mb-3">
+                    <label for="nivelAgente" class="form-label">Nível do Agente</label>
+                    <input type="number" class="form-control" id="nivelAgente" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nivelAutonomia" class="form-label">Nível de Autonomia</label>
+                    <input type="number" class="form-control" id="nivelAutonomia" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fkIdAI" class="form-label">ID da AI Associada</label>
+                    <input type="number" class="form-control" id="fkIdAI" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Agente</button>
+            </form>
+    
+            <br>
+            <br>
+            <br>
+            <h1>Adicionar Nova IA</h1>
+            <form action="/insertIA" method="POST">
+                <div class="mb-3">
+                    <label for="idIA" class="form-label">ID</label>
+                    <input type="number" class="form-control" id="idIA" name="idIA" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nomeIA" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nomeIA" name="nomeIA" required>
+                </div>
+                <div class="mb-3">
+                    <label for="versaoIA" class="form-label">Versão</label>
+                    <input type="text" class="form-control" id="versaoIA" name="versaoIA" required>
+                </div>
+                <div class="mb-3">
+                    <label for="propositoIA" class="form-label">Propósito</label>
+                    <input type="text" class="form-control" id="propositoIA" name="propositoIA" required>
+                </div>
+                <div class="mb-3">
+                    <label for="statusIA" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="statusIA" name="statusIA" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar IA</button>
+            </form>
+    
+            <br>
+            <br>
+            <br>
+            <h1>Adicionar Novo Humano</h1>
+            <form action="/insertHumano" method="POST">
+                <div class="mb-3">
+                    <label for="nomeHumano" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nomeHumano" name="nomeHumano" required>
+                </div>
+                <div class="mb-3">
+                    <label for="humanoDataNasc" class="form-label">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="humanoDataNasc" name="humanoDataNasc" required>
+                </div>
+                <div class="mb-3">
+                    <label for="humanoResitencia" class="form-label">Resistência</label>
+                    <input type="number" class="form-control" id="humanoResistencia" name="humanoResistencia" required>
+                </div>
+                <div class="mb-3">
+                    <label for="humanoStatus" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="humanoStatus" name="humanoStatus" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Humano</button>
+            </form>
+    
+        </div>
+    
+        <script>
+            document.getElementById('insertForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                const nivelAgente = document.getElementById('nivelAgente').value;
+                const nivelAutonomia = document.getElementById('nivelAutonomia').value;
+                const fkIdAI = document.getElementById('fkIdAI').value;
+    
+                try {
+                    const response = await fetch(`http://localhost:3000/adicionarAgente`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            nivel_agente: nivelAgente,
+                            nivel_autonomia: nivelAutonomia,
+                            fk_id_AI: fkIdAI,
+                        }),
+                    });
+    
+                    if (response.ok) {
+                        alert('Agente adicionado com sucesso!');
+                    } else {
+                        const errorText = await response.text();
+                        alert(`Erro ao adicionar agente: ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao adicionar o agente!');
+                }
+            });
+        </script>
+
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+
+     
+
+     
+
+     
+
+
+      
+      
+    </main>
+
+
+    <script src="/scripts/CarouselSwiper.js"></script>
+    <script src="/scripts/Swiper.js"></script>
+    <script src="/scripts/ShoppingCart.js"></script>
+
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  </body>
+</html>

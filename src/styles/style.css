@@ -1,0 +1,81 @@
+body {
+    /* background: #eee; */
+    /* background: rgb(232 232 237/70%); */
+    /* background: #030305; */
+    background-image: url('../imagens/MatrixImagens/MatrixBackground.png');
+    background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
+    background-position: center;  /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    /* background-color: rgba(63, 255, 20, 0.7); */
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+   /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-h2-inside-swiper=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+   .h2-inside-swiper{
+    /* margin-top: 1%; */
+    /* margin-bottom: 2%; */
+  }
+
+  /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-h2-centralizado=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+  .h3-centralizado{
+    text-align: center;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-weight: 600;
+    color:rgb(255, 255, 255);
+    background-image: linear-gradient(170deg, #000000, #02a394 45%, #000000);
+    margin-left: 5%;
+    margin-right: 5%;
+
+
+    /* background-color: aqua; */
+  }
+
+  /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Upload de Arquivos=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+  .ImagemIconUpload{
+    width: 50px;
+    height: 50px;
+  }
+  #dropArea {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+    border: 2px dashed #cccccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #dropArea.hover {
+    background-color: #f0f8ff; /* Cor de fundo ao arrastar um arquivo para cima */
+  }
+  
+
+
+  @media (max-width: 1000px){
+    .h3-centralizado{
+      font-size: 1.6em;
+    }
+  }
+  @media (max-width: 700px){
+    .h3-centralizado{
+      font-size: 1.4em;
+    }
+  }
+  @media (max-width: 500px){
+    .h3-centralizado{
+      font-size: 1.3em;
+    }
+  }
+  @media (max-width: 415px){
+    .h3-centralizado{
+      font-size: 1.0em;
+    }
+  }
