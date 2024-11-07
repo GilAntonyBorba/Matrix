@@ -14,6 +14,11 @@
     <form action="/signup" method="POST">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
+        <label for="userType">Tipo de Usuário:</label>
+        <select name="userType" id="userType" required>
+            <option value="comum">Usuário Comum</option>
+            <option value="gerente">Usuário Gerente</option>
+        </select>
         <button type="submit">Sign Up</button>
     </form>
     <p>Already have an account? <a href="/login">Login</a></p>

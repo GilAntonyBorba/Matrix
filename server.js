@@ -45,12 +45,17 @@ app.use(
 );
 
 // cria novo postgres user
-async function createUser(username, password) {
+async function createUser(username, password, userType) {
     const client = new Client(superuserConfig);
     await client.connect();
     try {
-        const query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username);
-        await client.query(query);
+        let query;
+        if (userType === 'gerente') {
+           query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username);
+        }
+        else{
+           query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username);
+        }await client.query(query);
         
         console.log(`User ${username} created successfully.`);
     } catch (error) {
@@ -100,9 +105,9 @@ app.get('/signup', (req, res) => {
 
 // lida com signup
 app.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, userType } = req.body;
     try {
-        await createUser(username, password);
+        await createUser(username, password, userType);
         res.redirect('/login');
     } catch (error) {
         res.render('signup', { error: error.message });
