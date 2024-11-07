@@ -966,6 +966,37 @@ app.get('/selectPageLogStatusAgentes', (req, res) => {
     res.render('selectPageLogStatusAgentes', { user: req.session.userId }); 
   });
 
+app.get('/selectLogStatusAgentes', async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  const query = `
+      SELECT id_log, id_AI, antigo_status, novo_status, TO_CHAR(data_alteracao, 'YYYY-MM-DD HH24:MI:SS') AS data_alteracao
+      FROM Log_Status_Agentes
+      ORDER BY data_alteracao DESC;
+  `;
+
+  try {
+      const result = await client.query(query);
+      const logs = result.rows;
+      res.json(logs);
+  } catch (error) {
+      console.error('Erro ao buscar logs de status dos agentes:', error);
+      res.status(500).json({ error: 'Falha ao recuperar os logs de status' });
+  } finally {
+      await client.end();
+  }
+});
+  
+
 
 
 

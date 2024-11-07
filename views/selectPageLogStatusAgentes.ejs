@@ -86,56 +86,46 @@
       </nav>
     </header>
     <main>
-
-      <br>
-      <br>
-
+      <br><br>
       <h3 class="h3-centralizado">
-        Interações entre Humanos e AIs
+        Log de Status dos Agentes Referentes a uma AI
       </h3>
-    
-      <div id="div-interacoes" style="display: flex; justify-content: space-evenly; flex-wrap: wrap; flex-direction: row;">
+      <div id="div-log-status" style="display: flex; justify-content: space-evenly; flex-wrap: wrap; flex-direction: row;">
       </div>
-    
       <script>
-        async function fetchInteracoes() {
+        async function fetchLogStatus() {
           try {
-            const response = await fetch('/selectInteracaoHumanoAI');
-            if (!response.ok) {
-              console.error(`Erro na requisição: ${response.statusText}`);
-              throw new Error('Falha ao buscar interações');
-            }
+            const response = await fetch('/selectLogStatusAgentes');
+            if (!response.ok) throw new Error('Falha ao buscar logs de status dos agentes');
     
-            const interacoes = await response.json();
-            console.log(interacoes);
+            const logs = await response.json();
+            console.log(logs);
     
-            const divInteracoes = document.getElementById('div-interacoes');
-            divInteracoes.innerHTML = ''; 
+            const divLogStatus = document.getElementById('div-log-status');
+            divLogStatus.innerHTML = ''; 
     
-            interacoes.forEach(interacao => {
+            logs.forEach(log => {
               const card = document.createElement('div');
               card.classList.add('card_div_flexbox');
               card.innerHTML = `
                 <div class="card-body">
-                  <h5 class="card-title">Interação</h5>
+                  <h5 class="card-title">Log de Alteração</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item"><p>Nome do Humano: </p><p>${interacao.nome_humano}</p></li>
-                  <li class="list-group-item"><p>ID do Humano: </p><p>${interacao.id_humano}</p></li>
-                  <li class="list-group-item"><p>Tipo de Interação: </p><p>${interacao.tipo_interacao}</p></li>
-                  <li class="list-group-item"><p>Data de Interação: </p><p>${interacao.data_interacao}</p></li>
-                  <li class="list-group-item"><p>ID da AI: </p><p>${interacao.id_ai}</p></li>
-                  <li class="list-group-item"><p>Nome da AI: </p><p>${interacao.nome_ai}</p></li>
+                  <li class="list-group-item"><p>ID do Log: </p><p>${log.id_log}</p></li>
+                  <li class="list-group-item"><p>ID da AI: </p><p>${log.id_ai}</p></li>
+                  <li class="list-group-item"><p>Antigo Status: </p><p>${log.antigo_status}</p></li>
+                  <li class="list-group-item"><p>Novo Status: </p><p>${log.novo_status}</p></li>
+                  <li class="list-group-item"><p>Data de Alteração: </p><p>${log.data_alteracao}</p></li>
                 </ul>
               `;
-              divInteracoes.appendChild(card);
+              divLogStatus.appendChild(card);
             });
           } catch (error) {
-            console.error('Erro ao buscar as interações:', error);
+            console.error('Erro ao buscar os logs de status dos agentes:', error);
           }
         }
-    
-        window.onload = fetchInteracoes;
+        window.onload = fetchLogStatus;
       </script>
     </main>
     
