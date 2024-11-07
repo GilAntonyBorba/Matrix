@@ -23,25 +23,7 @@
     <link rel="stylesheet" href="/styles/styleNav.css">
     <link rel="stylesheet" href="/styles/styleSwiperCarousel.css">
     <link rel="stylesheet" href="/styles/styleSwiperBootstrap.css">
-    <title>Dashboard</title>
-
-    <style>
-      body {
-        /* background: #eee; */
-        /* background: rgb(232 232 237/70%); */
-        /* background: #030305; */
-        background-image: url('/imagens/MatrixImagens/matrix-resurrection1.jpg');
-        background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
-        background-position: center;  /* Centraliza a imagem */
-        background-repeat: no-repeat; /* Evita a repetição da imagem */
-        /* background-color: rgba(63, 255, 20, 0.7); */
-        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        color: #ffffff;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
+    <title>selectPageInteracaoHumanoAI</title>
 </head>
 <body>
     
@@ -79,7 +61,7 @@
           <div class="collapse navbar-collapse order-3" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" id="color-picker" aria-current="page" href="#">Select</a>
+                  <a class="nav-link active" id="color-picker" aria-current="page" href="/select">Select</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" id="color-picker" href="/insert">Insert</a>
@@ -104,79 +86,59 @@
       </nav>
     </header>
     <main>
-     
-        
+
       <br>
       <br>
 
       <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageHumanos">Humanos</a>
+        Interações entre Humanos e AIs
       </h3>
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageAI">AI</a>
-      </h3>
-
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-
-      
-     
-
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageInteracaoHumanoAI">Interação Humano - AI</a>
-      </h3>
-
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageHumanoPresenteLocal">Humanos Presentes em Locais</a>
-      </h3>
-
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageLogStatusAgentes">Log Status Agentes</a>
-      </h3>
-
-
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
     
-      
-      
-
-     
-
-     
-
-     
-
-
-      
-      
+      <div id="div-interacoes" style="display: flex; justify-content: space-evenly; flex-wrap: wrap; flex-direction: row;">
+      </div>
+    
+      <script>
+        async function fetchInteracoes() {
+          try {
+            const response = await fetch('/selectInteracaoHumanoAI');
+            if (!response.ok) {
+              console.error(`Erro na requisição: ${response.statusText}`);
+              throw new Error('Falha ao buscar interações');
+            }
+    
+            const interacoes = await response.json();
+            console.log(interacoes);
+    
+            const divInteracoes = document.getElementById('div-interacoes');
+            divInteracoes.innerHTML = ''; 
+    
+            interacoes.forEach(interacao => {
+              const card = document.createElement('div');
+              card.classList.add('card_div_flexbox');
+              card.innerHTML = `
+                <div class="card-body">
+                  <h5 class="card-title">Interação</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><p>Nome do Humano: </p><p>${interacao.nome_humano}</p></li>
+                  <li class="list-group-item"><p>ID do Humano: </p><p>${interacao.id_humano}</p></li>
+                  <li class="list-group-item"><p>Tipo de Interação: </p><p>${interacao.tipo_interacao}</p></li>
+                  <li class="list-group-item"><p>Data de Interação: </p><p>${interacao.data_interacao}</p></li>
+                  <li class="list-group-item"><p>ID da AI: </p><p>${interacao.id_ai}</p></li>
+                  <li class="list-group-item"><p>Nome da AI: </p><p>${interacao.nome_ai}</p></li>
+                </ul>
+              `;
+              divInteracoes.appendChild(card);
+            });
+          } catch (error) {
+            console.error('Erro ao buscar as interações:', error);
+          }
+        }
+    
+        window.onload = fetchInteracoes;
+      </script>
     </main>
-
-
+    
     <script src="/scripts/CarouselSwiper.js"></script>
     <script src="/scripts/Swiper.js"></script>
     <script src="/scripts/ShoppingCart.js"></script>

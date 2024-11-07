@@ -49,7 +49,7 @@ async function createUser(username, password) {
     const client = new Client(superuserConfig);
     await client.connect();
     try {
-        const query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I; GRANT SELECT ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username, username);
+        const query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username);
         await client.query(query);
         
         console.log(`User ${username} created successfully.`);
@@ -784,13 +784,6 @@ app.get('/selectAllAIsAndAgentes', async (req, res) => {
   }
 });
 
-// Rota para renderizar a página select.ejs
-app.get('/selectPageInteracaoHumanoAI', (req, res) => {
-  if (!req.session || !req.session.userId) return res.redirect('/login'); 
-  res.render('selectPageInteracaoHumanoAI', { user: req.session.userId }); 
-});
-
-
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -891,6 +884,14 @@ app.post('/insertIA', async (req, res) => {
 //------------------------------------VIEWS--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+app.get('/selectPageInteracaoHumanoAI', (req, res) => {
+  if (!req.session || !req.session.userId) return res.redirect('/login'); 
+  res.render('selectPageInteracaoHumanoAI', { user: req.session.userId }); 
+});
+
+
 app.get('/selectInteracaoHumanoAI', async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -920,6 +921,56 @@ app.get('/selectInteracaoHumanoAI', async (req, res) => {
       await client.end();
   }
 });
+
+
+
+app.get('/selectPageHumanoPresenteLocal', (req, res) => {
+  if (!req.session || !req.session.userId) return res.redirect('/login'); 
+    res.render('selectPageHumanoPresenteLocal', { user: req.session.userId }); 
+  });
+
+app.get('/selectHumanoPresenteLocal', async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  const query = `
+      SELECT nome_humano, id_humano, latitude_local, longitude_local, descricao_local, TO_CHAR(data_inicio, 'YYYY-MM-DD HH24:MI:SS') AS data_inicio, TO_CHAR(data_fim, 'YYYY-MM-DD HH24:MI:SS') AS data_fim
+      FROM View_Humanos_Presentes
+      ORDER BY id_humano, data_inicio;
+  `;
+
+  try {
+      const result = await client.query(query);
+      const presencas = result.rows;
+      res.json(presencas);
+  } catch (error) {
+      console.error('Erro ao buscar presenças de humanos em locais:', error);
+      res.status(500).json({ error: 'Falha ao recuperar as presenças' });
+  } finally {
+      await client.end();
+  }
+});
+
+
+
+app.get('/selectPageLogStatusAgentes', (req, res) => {
+  if (!req.session || !req.session.userId) return res.redirect('/login'); 
+    res.render('selectPageLogStatusAgentes', { user: req.session.userId }); 
+  });
+
+
+
+
+
+
 
 
 
