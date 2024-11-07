@@ -20,7 +20,6 @@
     ALTER COLUMN id_entidade SET DEFAULT nextval('entidade_seq');
 
 
-
     CREATE TABLE IF NOT EXISTS Humanos (
         id_humano INT PRIMARY KEY,
         nome_humano VARCHAR(40) NOT NULL,

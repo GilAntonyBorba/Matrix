@@ -17,6 +17,7 @@
     
 // });
 
+
 $(document).ready(function () {
     var $cards = $(".card");
     var animationEnabled = true;

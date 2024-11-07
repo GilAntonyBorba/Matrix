@@ -12,6 +12,7 @@
 //     spanLogin.textContent = "";//para não manter as mensagens de erro mesmoq ue eelas estejam certas (quando vc submeter o formulário de novo)
 //     spanPassword.textContent = "";
 
+
 //     if (form.InputLogin.value === "") {
 //         spanLogin.textContent = 'Usuário deve ser preenchido com o nome do usuário do sistema';
 //         formValido = false;
