@@ -30,7 +30,7 @@
         /* background: #eee; */
         /* background: rgb(232 232 237/70%); */
         /* background: #030305; */
-        background-image: url('/imagens/MatrixImagens/neo-matrix-resurrection.jpg');
+        background-image: url('/imagens/MatrixImagens/neo-matrix-resurrection-back.jpg');
         background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
         background-position: center;  /* Centraliza a imagem */
         background-repeat: no-repeat; /* Evita a repetição da imagem */
@@ -107,115 +107,171 @@
     <main>
      
         
-        <% if (error) { %>
-            <p style="color: red;"><%= error %></p>
-        <% } %>
-    
-        <div class="container mt-5">
-            <h1>Adicionar Novo Agente</h1>
-            <form id="insertForm">
-                <div class="mb-3">
-                    <label for="nivelAgente" class="form-label">Nível do Agente</label>
-                    <input type="number" class="form-control" id="nivelAgente" required>
-                </div>
-                <div class="mb-3">
-                    <label for="nivelAutonomia" class="form-label">Nível de Autonomia</label>
-                    <input type="number" class="form-control" id="nivelAutonomia" required>
-                </div>
-                <div class="mb-3">
-                    <label for="fkIdAI" class="form-label">ID da AI Associada</label>
-                    <input type="number" class="form-control" id="fkIdAI" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Adicionar Agente</button>
-            </form>
-    
-            <br>
-            <br>
-            <br>
-            <h1>Adicionar Nova IA</h1>
-            <form action="/insertIA" method="POST">
-                <div class="mb-3">
-                    <label for="idIA" class="form-label">ID</label>
-                    <input type="number" class="form-control" id="idIA" name="idIA" required>
-                </div>
-                <div class="mb-3">
-                    <label for="nomeIA" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="nomeIA" name="nomeIA" required>
-                </div>
-                <div class="mb-3">
-                    <label for="versaoIA" class="form-label">Versão</label>
-                    <input type="text" class="form-control" id="versaoIA" name="versaoIA" required>
-                </div>
-                <div class="mb-3">
-                    <label for="propositoIA" class="form-label">Propósito</label>
-                    <input type="text" class="form-control" id="propositoIA" name="propositoIA" required>
-                </div>
-                <div class="mb-3">
-                    <label for="statusIA" class="form-label">Status</label>
-                    <input type="text" class="form-control" id="statusIA" name="statusIA" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Adicionar IA</button>
-            </form>
-    
-            <br>
-            <br>
-            <br>
-            <h1>Adicionar Novo Humano</h1>
-            <form action="/insertHumano" method="POST">
-                <div class="mb-3">
-                    <label for="nomeHumano" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="nomeHumano" name="nomeHumano" required>
-                </div>
-                <div class="mb-3">
-                    <label for="humanoDataNasc" class="form-label">Data de Nascimento</label>
-                    <input type="date" class="form-control" id="humanoDataNasc" name="humanoDataNasc" required>
-                </div>
-                <div class="mb-3">
-                    <label for="humanoResitencia" class="form-label">Resistência</label>
-                    <input type="number" class="form-control" id="humanoResistencia" name="humanoResistencia" required>
-                </div>
-                <div class="mb-3">
-                    <label for="humanoStatus" class="form-label">Status</label>
-                    <input type="text" class="form-control" id="humanoStatus" name="humanoStatus" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Adicionar Humano</button>
-            </form>
-    
-        </div>
-    
-        <script>
-            document.getElementById('insertForm').addEventListener('submit', async (event) => {
-                event.preventDefault();
-    
-                const nivelAgente = document.getElementById('nivelAgente').value;
-                const nivelAutonomia = document.getElementById('nivelAutonomia').value;
-                const fkIdAI = document.getElementById('fkIdAI').value;
-    
-                try {
-                    const response = await fetch(`http://localhost:3000/adicionarAgente`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            nivel_agente: nivelAgente,
-                            nivel_autonomia: nivelAutonomia,
-                            fk_id_AI: fkIdAI,
-                        }),
-                    });
-    
-                    if (response.ok) {
-                        alert('Agente adicionado com sucesso!');
-                    } else {
-                        const errorText = await response.text();
-                        alert(`Erro ao adicionar agente: ${errorText}`);
-                    }
-                } catch (error) {
-                    console.error('Erro:', error);
-                    alert('Ocorreu um erro ao adicionar o agente!');
-                }
-            });
-        </script>
+      <% if (error) { %>
+          <p style="color: red;"><%= error %></p>
+      <% } %>
+  
+      <div class="container mt-5">
+          <h1>Adicionar Novo Agente</h1>
+          <form id="insertForm">
+              <div class="mb-3">
+                  <label for="nivelAgente" class="form-label">Nível do Agente</label>
+                  <input type="number" class="form-control" id="nivelAgente" required>
+              </div>
+              <div class="mb-3">
+                  <label for="nivelAutonomia" class="form-label">Nível de Autonomia</label>
+                  <input type="number" class="form-control" id="nivelAutonomia" required>
+              </div>
+              <div class="mb-3">
+                  <label for="fkIdAI" class="form-label">ID da AI Associada</label>
+                  <input type="number" class="form-control" id="fkIdAI" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Adicionar Agente</button>
+          </form>
+  
+          <br>
+          <br>
+          <br>
+          <h1>Adicionar Nova IA</h1>
+          <form action="/insertIA" method="POST">
+              <div class="mb-3">
+                  <label for="idIA" class="form-label">ID</label>
+                  <input type="number" class="form-control" id="idIA" name="idIA" required>
+              </div>
+              <div class="mb-3">
+                  <label for="nomeIA" class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="nomeIA" name="nomeIA" required>
+              </div>
+              <div class="mb-3">
+                  <label for="versaoIA" class="form-label">Versão</label>
+                  <input type="text" class="form-control" id="versaoIA" name="versaoIA" required>
+              </div>
+              <div class="mb-3">
+                  <label for="propositoIA" class="form-label">Propósito</label>
+                  <input type="text" class="form-control" id="propositoIA" name="propositoIA" required>
+              </div>
+              <div class="mb-3">
+                  <label for="statusIA" class="form-label">Status</label>
+                  <input type="text" class="form-control" id="statusIA" name="statusIA" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Adicionar IA</button>
+          </form>
+  
+          <br>
+          <br>
+          <br>
+          <h1>Adicionar Novo Humano</h1>
+          <form action="/insertHumano" method="POST">
+              <div class="mb-3">
+                  <label for="nomeHumano" class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="nomeHumano" name="nomeHumano" required>
+              </div>
+              <div class="mb-3">
+                  <label for="humanoDataNasc" class="form-label">Data de Nascimento</label>
+                  <input type="date" class="form-control" id="humanoDataNasc" name="humanoDataNasc" required>
+              </div>
+              <div class="mb-3">
+                  <label for="humanoResitencia" class="form-label">Resistência</label>
+                  <input type="number" class="form-control" id="humanoResistencia" name="humanoResistencia" required>
+              </div>
+              <div class="mb-3">
+                  <label for="humanoStatus" class="form-label">Status</label>
+                  <input type="text" class="form-control" id="humanoStatus" name="humanoStatus" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Adicionar Humano</button>
+          </form>
+  
+      </div>
+  
+      <script>
+          document.getElementById('insertForm').addEventListener('submit', async (event) => {
+              event.preventDefault();
+  
+              const nivelAgente = document.getElementById('nivelAgente').value;
+              const nivelAutonomia = document.getElementById('nivelAutonomia').value;
+              const fkIdAI = document.getElementById('fkIdAI').value;
+  
+              try {
+                  const response = await fetch(`http://localhost:3000/adicionarAgente`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                          nivel_agente: nivelAgente,
+                          nivel_autonomia: nivelAutonomia,
+                          fk_id_AI: fkIdAI,
+                      }),
+                  });
+  
+                  if (response.ok) {
+                      alert('Agente adicionado com sucesso!');
+                  } else {
+                      const errorText = await response.text();
+                      alert(`Erro ao adicionar agente: ${errorText}`);
+                  }
+              } catch (error) {
+                  console.error('Erro:', error);
+                  alert('Ocorreu um erro ao adicionar o agente!');
+              }
+          });
+      </script>
+
+    <div class="container mt-5">
+      <h1>Adicionar Nova Presença</h1>
+      <form id="insertPresenteForm">
+          <div class="mb-3">
+              <label for="latitude" class="form-label">Latitude (Local)</label>
+              <input type="number" step="0.000001" class="form-control" id="latitude" name="latitude" required>
+          </div>
+          <div class="mb-3">
+              <label for="longitude" class="form-label">Longitude (Local)</label>
+              <input type="number" step="0.000001" class="form-control" id="longitude" name="longitude" required>
+          </div>
+          <div class="mb-3">
+              <label for="idHumano" class="form-label">ID do Humano</label>
+              <input type="number" class="form-control" id="idHumano" name="idHumano" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Adicionar Presença</button>
+      </form>
+
+      <script>
+          document.getElementById('insertPresenteForm').addEventListener('submit', async (event) => {
+              event.preventDefault();
+
+              const latitude = document.getElementById('latitude').value;
+              const longitude = document.getElementById('longitude').value;
+              const idHumano = document.getElementById('idHumano').value;
+
+              try {
+                  const response = await fetch(`http://localhost:3000/adicionarPresente`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                          latitude,
+                          longitude,
+                          idHumano,
+                      }),
+                  });
+
+                  if (response.ok) {
+                      alert('Presença adicionada com sucesso!');
+                  } else {
+                      const errorText = await response.text();
+                      alert(`Erro ao adicionar presença: ${errorText}`);
+                  }
+              } catch (error) {
+                  console.error('Erro:', error);
+                  alert('Ocorreu um erro ao adicionar a presença!');
+              }
+          });
+      </script>
+</div>
+
+
+
 
 
       <br>

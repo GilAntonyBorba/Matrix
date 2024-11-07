@@ -880,6 +880,35 @@ app.post('/insertIA', async (req, res) => {
 });
 
 
+app.post('/adicionarPresente', async (req, res) => {
+  const { latitude, longitude, idHumano } = req.body;
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  try {
+      const query = `
+          INSERT INTO Presente (fk_latitude, fk_longitude, fk_id_humano)
+          VALUES ($1, $2, $3)
+      `;
+      await client.query(query, [latitude, longitude, idHumano]);
+      
+      res.status(200).send('Presença adicionada com sucesso');
+  } catch (error) {
+      console.error('Erro ao adicionar presença:', error);
+      res.status(500).send('Erro no servidor');
+  } finally {
+      await client.end();
+  }
+});
+
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------VIEWS--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
