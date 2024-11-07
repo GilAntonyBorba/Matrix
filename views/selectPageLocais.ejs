@@ -23,25 +23,7 @@
     <link rel="stylesheet" href="/styles/styleNav.css">
     <link rel="stylesheet" href="/styles/styleSwiperCarousel.css">
     <link rel="stylesheet" href="/styles/styleSwiperBootstrap.css">
-    <title>Dashboard</title>
-
-    <style>
-      body {
-        /* background: #eee; */
-        /* background: rgb(232 232 237/70%); */
-        /* background: #030305; */
-        background-image: url('/imagens/MatrixImagens/matrix-resurrection1.jpg');
-        background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
-        background-position: center;  /* Centraliza a imagem */
-        background-repeat: no-repeat; /* Evita a repetição da imagem */
-        /* background-color: rgba(63, 255, 20, 0.7); */
-        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        color: #ffffff;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
+    <title>selectPageInteracaoHumanoAI</title>
 </head>
 <body>
     
@@ -79,7 +61,7 @@
           <div class="collapse navbar-collapse order-3" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" id="color-picker" aria-current="page" href="#">Select</a>
+                  <a class="nav-link active" id="color-picker" aria-current="page" href="/select">Select</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" id="color-picker" href="/insert">Insert</a>
@@ -103,73 +85,57 @@
         </div>
       </nav>
     </header>
+    
     <main>
-     
-        
-      <br>
-      <br>
-
+    
+      <br><br>
       <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageHumanos">Humanos</a>
-      </h3>
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageAI">AI</a>
+        Locais Existentes
       </h3>
 
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
+      <div class="container mt-5">
+          <div id="div-locais" class="mt-3" style="display: flex; flex-wrap: wrap; gap: 20px;">
+              <!-- Conteúdo será carregado via JavaScript -->
+          </div>
+      </div>
 
-      
-     
+      <script>
+        async function fetchLocais() {
+            try {
+                const response = await fetch('/selectLocais');
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar locais');
+                }
+                const locais = await response.json();
 
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageInteracaoHumanoAI">Interação Humano - AI</a>
-      </h3>
+                const divLocais = document.getElementById('div-locais');
+                divLocais.innerHTML = ''; 
 
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageHumanoPresenteLocal">Humanos Presentes em Locais</a>
-      </h3>
+                locais.forEach(local => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.style.width = '18rem';
+                    card.innerHTML = `
+                        <div class="card-body">
+                            <h5 class="card-title">${local.descricao}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Latitude: ${local.latitude}</li>
+                            <li class="list-group-item">Longitude: ${local.longitude}</li>
+                            <li class="list-group-item">Descrição: ${local.descricao}</li>
+                        </ul>
+                    `;
+                    divLocais.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar locais:', error);
+            }
+        }
 
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageLogStatusAgentes">Log Status Agentes</a>
-      </h3>
-
-      <h3 class="h3-centralizado">
-        <a class="nav-link" id="color-picker" href="/selectPageLocais">Locais</a>
-      </h3>
-
-
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-  
-     
-
-     
-
-     
-
-
-      
-      
+        window.onload = fetchLocais;
+      </script>
     </main>
-
-
+    
     <script src="/scripts/CarouselSwiper.js"></script>
     <script src="/scripts/Swiper.js"></script>
     <script src="/scripts/ShoppingCart.js"></script>

@@ -660,35 +660,11 @@ app.put('/updateAgentesStatus', async (req, res) => {
 
 
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------SELECTS--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
-
-//inserts
-app.post('/adicionarEvento', async (req, res) => {
-  const { nome, tipo, latitude, longitude, descricao } = req.body;
-  const client = new Client({
-    user: req.session.userId,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: req.session.password,
-    port: process.env.DB_PORT,
-  });
-  await client.connect();
-
-  try {
-      // Chamando a stored procedure para adicionar o evento e o local
-      await client.query('CALL adicionar_evento_e_local($1, $2, $3, $4, $5)', [nome, tipo, latitude, longitude, descricao]);
-      res.status(200).send('Evento adicionado com sucesso');
-  } catch (error) {
-      console.error('Erro ao adicionar evento:', error);
-      res.status(500).send('Erro no servidor');
-  } finally {
-      await client.end();
-  }
-});
 
 // Rota para renderizar a página select.ejs
 app.get('/select', (req, res) => {
@@ -784,11 +760,74 @@ app.get('/selectAllAIsAndAgentes', async (req, res) => {
   }
 });
 
+app.get('/selectPageLocais', (req, res) => {
+  if (!req.session || !req.session.userId) return res.redirect('/selectPageLocais'); 
+  res.render('selectPageLocais', { user: req.session.userId }); 
+});
+
+app.get('/selectLocais', async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  const query = `
+      SELECT latitude, longitude, descricao
+      FROM Lugar
+      ORDER BY descricao ASC;
+  `;
+
+  try {
+      const result = await client.query(query);
+      const locais = result.rows;
+      res.json(locais);
+  } catch (error) {
+      console.error('Erro ao buscar locais:', error);
+      res.status(500).json({ error: 'Falha ao recuperar locais' });
+  } finally {
+      await client.end();
+  }
+});
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------INSERTS--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+app.post('/adicionarEvento', async (req, res) => {
+  const { nome, tipo, latitude, longitude, descricao } = req.body;
+  const client = new Client({
+    user: req.session.userId,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: req.session.password,
+    port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  try {
+      // Chamando a stored procedure para adicionar o evento e o local
+      await client.query('CALL adicionar_evento_e_local($1, $2, $3, $4, $5)', [nome, tipo, latitude, longitude, descricao]);
+      res.status(200).send('Evento adicionado com sucesso');
+  } catch (error) {
+      console.error('Erro ao adicionar evento:', error);
+      res.status(500).send('Erro no servidor');
+  } finally {
+      await client.end();
+  }
+});
+
 
 //inserts ( aqui vai utilizar a trigger  trg_atualizar_status_autonomia
 // Ao adicionar um agente, a trigger trg_atualizar_status_autonomia pode ser acionada dependendo do nível de autonomia.
