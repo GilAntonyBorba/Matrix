@@ -371,14 +371,11 @@ app.get('/update', (req, res) => {
 });
 
 
-// update humanos
-// Rota para atualizar um humano
-// Rota para atualizar um humano com suporte a imagem opcional
+// UPDATE HUMANO
 app.put('/updateHumano/:id', upload.single('imagem'), async (req, res) => {
   const humanoId = req.params.id;
   const { nomeHumano, humanoDataNasc, humanoStatus, humanoResistencia } = req.body;
 
-  // Construa dinamicamente o SQL apenas com os campos fornecidos
   let camposParaAtualizar = [];
   let values = [];
   let index = 1;
@@ -447,6 +444,130 @@ app.put('/updateHumano/:id', upload.single('imagem'), async (req, res) => {
   }
 });
 
+// UPDATE AI
+app.put('/updateAI/:id', async (req, res) => {
+  const idAI = req.params.id;
+  const { versaoAI, nomeAI, propositoAI, statusAI } = req.body;
+
+  let camposParaAtualizar = [];
+  let values = [];
+  let index = 1;
+
+  if (versaoAI !== undefined && versaoAI !== null) {
+    camposParaAtualizar.push(`versao_AI = $${index++}`);
+    values.push(versaoAI);
+  }
+  if (nomeAI !== undefined && nomeAI !== null) {
+      camposParaAtualizar.push(`nome_AI = $${index++}`);
+      values.push(nomeAI);
+  }
+  if (propositoAI !== undefined && propositoAI !== null) {
+      camposParaAtualizar.push(`proposito_AI = $${index++}`);
+      values.push(propositoAI);
+  }
+  if (statusAI !== undefined && statusAI !== null) {
+      camposParaAtualizar.push(`status_AI = $${index++}`);
+      values.push(statusAI);
+  }
+
+  // Se nenhum campo foi fornecido para atualizar, retornar erro
+  if (camposParaAtualizar.length === 0) {
+    console.log('Valores recebidos:', { versaoAI, nomeAI, propositoAI, statusAI });
+    console.log('camposParaAtualizar:', { camposParaAtualizar });
+    return res.status(400).send('Nenhum campo para atualizar foi fornecido.');
+  }
+
+  // Adicione o ID como último parâmetro
+  values.push(idAI);
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: req.session.DB_PORT,
+  });
+  await client.connect();
+
+  try {
+      const query = `
+          UPDATE AI
+          SET ${camposParaAtualizar.join(', ')}
+          WHERE id_AI = $${index}
+      `;
+
+      const result = await client.query(query, values);
+
+      if (result.rowCount > 0) {
+          res.status(200).send('AI atualizada com sucesso');
+      } else {
+          res.status(404).send('AI não encontrada');
+      }
+  } catch (error) {
+      console.error('Erro ao atualizar AI:', error);
+      res.status(500).send('Erro no servidor');
+  } finally {
+      await client.end();
+  }
+});
+
+
+// UPDATE AGENTE
+app.put('/updateAgente/:codigoAgente', async (req, res) => {
+  const codigoAgente = req.params.codigoAgente;
+  const { nivelAgente, nivelAutonomia } = req.body;
+
+  let camposParaAtualizar = [];
+  let values = [];
+  let index = 1;
+
+  if (nivelAgente !== undefined && nivelAgente !== null) {
+      camposParaAtualizar.push(`nivel_agente = $${index++}`);
+      values.push(nivelAgente);
+  }
+  if (nivelAutonomia !== undefined && nivelAutonomia !== null) {
+      camposParaAtualizar.push(`nivel_autonomia = $${index++}`);
+      values.push(nivelAutonomia);
+  }
+
+  if (camposParaAtualizar.length === 0) {
+      return res.status(400).send('Nenhum campo para atualizar foi fornecido.');
+  }
+
+  values.push(codigoAgente);
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  try {
+      const query = `
+          UPDATE Agentes
+          SET ${camposParaAtualizar.join(', ')}
+          WHERE codigo_agente = $${index}
+      `;
+
+      const result = await client.query(query, values);
+
+      if (result.rowCount > 0) {
+          res.status(200).send('Agente atualizado com sucesso');
+      } else {
+          res.status(404).send('Agente não encontrado');
+      }
+  } catch (error) {
+      console.error('Erro ao atualizar agente:', error);
+      res.status(500).send('Erro no servidor');
+  } finally {
+      await client.end();
+  }
+});
+
+
 
 
 
@@ -473,6 +594,19 @@ app.put('/updateAgentesStatus', async (req, res) => {
         await client.end();
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //inserts
@@ -685,29 +819,7 @@ app.post('/insertIA', async (req, res) => {
   }
 });
 
-app.post('/updateAgente', async (req, res) => {
-  const { codigo_agente, nivel_autonomia } = req.body;
 
-  const client = new Client({
-    user: req.session.userId,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: req.session.password,
-    port: process.env.DB_PORT,
-  });
-  await client.connect();
-
-  try {
-      const query = `UPDATE Agentes SET nivel_autonomia = $1 WHERE codigo_agente = $2`;
-      await client.query(query, [nivel_autonomia, codigo_agente]);
-      res.redirect('/update'); 
-  } catch (error) {
-      console.error('Erro ao atualizar nivel_autonomia:', error);
-      res.status(500).send('Erro ao atualizar nivel_autonomia');
-  } finally {
-      await client.end();
-  }
-});
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');

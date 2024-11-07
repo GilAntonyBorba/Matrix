@@ -30,11 +30,12 @@
         /* background: #eee; */
         /* background: rgb(232 232 237/70%); */
         /* background: #030305; */
-        background-image: url('/imagens/MatrixImagens/neo-matrix-resurrection.jpg');
+        background-image: url('/imagens/MatrixImagens/neo-matrix-resurrection-back.jpg');
         background-size: cover;       /* Faz a imagem preencher a tela sem distorção */
         background-position: center;  /* Centraliza a imagem */
         background-repeat: no-repeat; /* Evita a repetição da imagem */
         /* background-color: rgba(63, 255, 20, 0.7); */
+        /* background-color: #ddfced; */
         font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
         font-size: 14px;
         color: #000000;
@@ -225,26 +226,6 @@
       });
     </script>
     
-
-
-      <br>
-      <br>
-
-      <div class="container mt-5">
-        <h1>Atualizar Nível de Autonomia</h1>
-        <form action="/updateAgente" method="POST">
-            <div class="mb-3">
-                <label for="codigo_agente" class="form-label">Código do Agente</label>
-                <input type="number" class="form-control" id="codigo_agente" name="codigo_agente" required>
-            </div>
-            <div class="mb-3">
-                <label for="nivel_autonomia" class="form-label">Novo Nível de Autonomia</label>
-                <input type="number" class="form-control" id="nivel_autonomia" name="nivel_autonomia" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Atualizar</button>
-        </form>
-      </div>
-
       <br>
       <br>
       <br>
@@ -296,43 +277,158 @@
         });
     </script>
 
+    <div class="container mt-5">
+      <h1>Atualizar AI</h1>
+      <form id="updateAIForm">
+          <div class="mb-3">
+              <label for="idAI" class="form-label">ID da AI (Obrigatório)</label>
+              <input type="number" class="form-control" id="idAI" required>
+          </div>
+          <div class="mb-3">
+              <label for="versaoAI" class="form-label">Versão (Opcional)</label>
+              <input type="text" class="form-control" id="versaoAI">
+          </div>
+          <div class="mb-3">
+              <label for="nomeAI" class="form-label">Nome (Opcional)</label>
+              <input type="text" class="form-control" id="nomeAI">
+          </div>
+          <div class="mb-3">
+              <label for="propositoAI" class="form-label">Propósito (Opcional)</label>
+              <input type="text" class="form-control" id="propositoAI">
+          </div>
+          <div class="mb-3">
+              <label for="statusAI" class="form-label">Status (Opcional)</label>
+              <input type="text" class="form-control" id="statusAI">
+          </div>
+          <button type="submit" class="btn btn-primary">Atualizar AI</button>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById('updateAIForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const idAI = document.getElementById('idAI').value;
+          const versaoAI = document.getElementById('versaoAI').value;
+          const nomeAI = document.getElementById('nomeAI').value;
+          const propositoAI = document.getElementById('propositoAI').value;
+          const statusAI = document.getElementById('statusAI').value;
+
+          const dataToSend = {
+            versaoAI: versaoAI || null,
+            nomeAI: nomeAI || null,
+            propositoAI: propositoAI || null,
+            statusAI: statusAI || null,
+          };
+
+          try {
+            const response = await fetch(`http://localhost:3000/updateAI/${idAI}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(dataToSend),
+            });
+              if (response.ok) {
+                  alert('AI atualizada com sucesso!');
+              } else {
+                  const errorText = await response.text();
+                  alert(`Erro ao atualizar AI: ${errorText}`);
+              }
+          } catch (error) {
+              console.error('Erro ao atualizar AI:', error);
+              alert('Ocorreu um erro ao atualizar a AI!');
+          }
+      });
+    </script>
+
+    <div class="container mt-5">
+      <h1>Atualizar Agente</h1>
+      <form id="updateAgenteForm">
+          <div class="mb-3">
+              <label for="codigoAgente" class="form-label">Código Atual do Agente (Obrigatório)</label>
+              <input type="number" class="form-control" id="codigoAgente" required>
+          </div>
+          <div class="mb-3">
+              <label for="nivelAgente" class="form-label">Nível do Agente (Opcional)</label>
+              <input type="number" class="form-control" id="nivelAgente">
+          </div>
+          <div class="mb-3">
+              <label for="nivelAutonomia" class="form-label">Nível de Autonomia (Opcional)</label>
+              <input type="number" class="form-control" id="nivelAutonomia">
+          </div>
+          <button type="submit" class="btn btn-primary">Atualizar Agente</button>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById('updateAgenteForm').addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const codigoAgente = document.getElementById('codigoAgente').value;
+          const nivelAgente = document.getElementById('nivelAgente').value;
+          const nivelAutonomia = document.getElementById('nivelAutonomia').value;
+
+          const dataToSend = {
+              nivelAgente: nivelAgente || null,
+              nivelAutonomia: nivelAutonomia || null,
+          };
+
+          try {
+              const response = await fetch(`http://localhost:3000/updateAgente/${codigoAgente}`, {
+                  method: 'PUT',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(dataToSend),
+              });
+
+              if (response.ok) {
+                  alert('Agente atualizado com sucesso!');
+              } else {
+                  const errorText = await response.text();
+                  alert(`Erro ao atualizar agente: ${errorText}`);
+              }
+          } catch (error) {
+              console.error('Erro ao atualizar agente:', error);
+              alert('Ocorreu um erro ao atualizar o agente!');
+          }
+      });
+    </script>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+
+
+
 
     
 
 
 
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      
+
 
      
 
