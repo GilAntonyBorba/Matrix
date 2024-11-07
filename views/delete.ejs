@@ -143,6 +143,92 @@
     </script>
 
     <br>
+    <!-- DELETE AI -->
+    <br>
+
+    <div class="container mt-5">
+      <h1>Deletar AI</h1>
+      <form id="deleteAI">
+          <div class="mb-3">
+              <label for="idAI" class="form-label">ID da AI</label>
+              <input type="number" class="form-control" id="idAI" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Deletar AI</button>
+      </form>
+    </div>
+    
+    <script>
+        document.getElementById('deleteAI').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const idAI = document.getElementById('idAI').value;
+    
+            try {
+                const response = await fetch(`http://localhost:3000/deleteAI/${idAI}`, {
+                    method: 'DELETE',
+                });
+    
+                if (response.ok) {
+                    alert('AI deletada com sucesso!');
+                } else {
+                    const errorText = await response.text();
+                    alert(`Erro ao deletar AI: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao deletar a AI!');
+            }
+        });
+    </script>
+    
+    <br>
+    <!-- DELETE Agente -->
+    <br>
+
+    <div class="container mt-5">
+      <h1>Deletar Agente</h1>
+      <form id="deleteAgente">
+          <div class="mb-3">
+              <label for="codigoAgente" class="form-label">Código do Agente</label>
+              <input type="number" class="form-control" id="codigoAgente" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Deletar Agente</button>
+      </form>
+    </div>
+    
+    <script>
+        document.getElementById('deleteAgente').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const codigoAgente = document.getElementById('codigoAgente').value;
+    
+            try {
+                const response = await fetch(`http://localhost:3000/deleteAgente/${codigoAgente}`, {
+                    method: 'DELETE',
+                });
+    
+                if (response.ok) {
+                    alert('Agente deletado com sucesso!');
+                } else {
+                    const errorText = await response.text();
+                    alert(`Erro ao deletar agente: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao deletar o agente!');
+            }
+        });
+    </script>
+    
+
+
+
+
+
+
+
+
+    <br>
     <!-- DELETE EVENTO -->
     <br>
 
@@ -181,6 +267,7 @@
       });
     </script>
 
+    
 
       <br>
       <br>

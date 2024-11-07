@@ -49,7 +49,7 @@ async function createUser(username, password) {
     const client = new Client(superuserConfig);
     await client.connect();
     try {
-        const query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I', username, password, username, username);
+        const query = format('CREATE USER %I WITH PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE; GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO %I; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO %I; GRANT SELECT ON ALL TABLES IN SCHEMA public TO %I;', username, password, username, username, username);
         await client.query(query);
         
         console.log(`User ${username} created successfully.`);
@@ -323,8 +323,6 @@ app.post('/uploadImage', (req, res) => {
   });
 
   // DELETE EVENTO
-  
-
   app.delete('/deleteEvento/:id', async (req, res) => {
     const eventoId = req.params.id;
     const client = new Client({
@@ -353,6 +351,66 @@ app.post('/uploadImage', (req, res) => {
   });
 
 
+  // DELETE AI
+  app.delete('/deleteAI/:id', async (req, res) => {
+    const idAI = req.params.id;
+    const client = new Client({
+        user: req.session.userId,
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        password: req.session.password,
+        port: process.env.DB_PORT,
+    });
+    await client.connect();
+
+    try {
+        const result = await client.query('DELETE FROM AI WHERE id_AI = $1', [idAI]);
+
+        if (result.rowCount > 0) {
+            res.status(200).send('AI deletada com sucesso');
+        } else {
+            res.status(404).send('AI não encontrada');
+        }
+    } catch (error) {
+        console.error('Erro ao deletar AI:', error);
+        res.status(500).send('Erro no servidor');
+    } finally {
+        await client.end();
+    }
+  });
+
+
+  // DELETE AGENTE
+  app.delete('/deleteAgente/:codigoAgente', async (req, res) => {
+    const codigoAgente = req.params.codigoAgente;
+    const client = new Client({
+        user: req.session.userId,
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        password: req.session.password,
+        port: process.env.DB_PORT,
+    });
+    await client.connect();
+
+    try {
+        const result = await client.query('DELETE FROM Agentes WHERE codigo_agente = $1', [codigoAgente]);
+
+        if (result.rowCount > 0) {
+            res.status(200).send('Agente deletado com sucesso');
+        } else {
+            res.status(404).send('Agente não encontrado');
+        }
+    } catch (error) {
+        console.error('Erro ao deletar agente:', error);
+        res.status(500).send('Erro no servidor');
+    } finally {
+        await client.end();
+    }
+  });
+
+  
+
+
 
 
 
@@ -361,7 +419,6 @@ app.post('/uploadImage', (req, res) => {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------UPDATE--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 // update
 // Rota para renderizar a página update.ejs
@@ -727,8 +784,18 @@ app.get('/selectAllAIsAndAgentes', async (req, res) => {
   }
 });
 
+// Rota para renderizar a página select.ejs
+app.get('/selectPageInteracaoHumanoAI', (req, res) => {
+  if (!req.session || !req.session.userId) return res.redirect('/login'); 
+  res.render('selectPageInteracaoHumanoAI', { user: req.session.userId }); 
+});
 
 
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------INSERTS--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //inserts ( aqui vai utilizar a trigger  trg_atualizar_status_autonomia
 // Ao adicionar um agente, a trigger trg_atualizar_status_autonomia pode ser acionada dependendo do nível de autonomia.
@@ -816,6 +883,41 @@ app.post('/insertIA', async (req, res) => {
       res.redirect('/insert');
   } finally {
     await client.end();
+  }
+});
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------VIEWS--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+app.get('/selectInteracaoHumanoAI', async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const client = new Client({
+      user: req.session.userId,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: req.session.password,
+      port: process.env.DB_PORT,
+  });
+  await client.connect();
+
+  const query = `
+      SELECT nome_humano, id_humano, tipo_interacao, TO_CHAR(data_interacao, 'YYYY-MM-DD') AS data_interacao, id_ai, nome_ai
+      FROM View_Humanos_Interacao_AI
+      ORDER BY data_interacao DESC;
+  `;
+
+  try {
+      const result = await client.query(query);
+      const interacoes = result.rows;
+      res.json(interacoes);
+  } catch (error) {
+      console.error('Erro ao buscar interações de humanos e AI:', error);
+      res.status(500).json({ error: 'Falha ao recuperar as interações' });
+  } finally {
+      await client.end();
   }
 });
 
