@@ -54,7 +54,7 @@ Este projeto integra uma stack voltada à construção de aplicações web com b
 
 ## 🖥️ Como rodar localmente
 
-Está totalmente documentado no relatório do projeto (PDF), incluindo:
+Está totalmente documentado no [Relatório Técnico](./docs/Relatorio_Tecnico_MatrixBD2.pdf) do projeto (PDF), incluindo:
 
 - Instalação do Node.js
 - Criação do banco `BD2Matrix` via *PgAdmin*
